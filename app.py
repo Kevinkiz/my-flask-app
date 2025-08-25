@@ -24,30 +24,30 @@ def init_db():
             "Depreciation" REAL,
             "Bribes" REAL,
             "Penalties" REAL,
-            "Gifts & Offers" REAL,
+            "GiftsAndOffers" REAL,
             "Donations" REAL,
             "Others" REAL,
-            "Total Non Allowable Deductions" REAL,
-            "Adjusted Net Profit Before Tax" REAL,
-            "Total Wear & Tear2" REAL,
-            "25% Start up Costs" REAL,
-            "5% Industrial Building Deduction" REAL,
-            "20% Initial Building Allowance" REAL,
-            "Horticultural Exp" REAL,
-            "Others NAD" REAL,
-            "Total Allowable Deductions" REAL,
-            "Chargeable Income" REAL,
-            "Loss B/f" REAL,
-            "Adjusted Chargeable Income" REAL,
-            "30% Cooperation Tax" REAL,
+            "TotalNonAllowableDeductions" REAL,
+            "AdjustedNetProfitBeforeTax" REAL,
+            "TotalWearAndTear2" REAL,
+            "StartupCosts" REAL,
+            "IndustrialBuildingDeduction" REAL,
+            "InitialBuildingAllowance" REAL,
+            "HorticulturalExp" REAL,
+            "OthersNAD" REAL,
+            "TotalAllowableDeductions" REAL,
+            "ChargeableIncome" REAL,
+            "LossBf" REAL,
+            "AdjustedChargeableIncome" REAL,
+            "CooperationTax" REAL,
             "WHTPaid" REAL,
             "TaxCredit" REAL,
             "ProvisionalTaxPaid" REAL,
             "TaxPayableRecoverable" REAL,
-            "Computers,Data & Software" REAL,
-            "Plant & Machinery(Farming,Mining,Manufacture)" REAL,
-            "Automobiles<=60Million" REAL,
-            "Others not in any Class" REAL,
+            "ComputersDataSoftware" REAL,
+            "PlantMachinery" REAL,
+            "Automobiles" REAL,
+            "OthersNotInClass" REAL,
             "file" TEXT
         )
     ''')
@@ -59,9 +59,13 @@ init_db()
 # Helper to safely convert to float
 def to_float(form, field):
     try:
-        return float(form.get(field, 0) or 0)
-    except ValueError:
-        return 0
+        value = form.get(field, "0") or "0"
+        # Remove commas and spaces before converting
+        value = value.replace(",", "").strip()
+        return float(value)
+    except Exception:
+        return 0.0
+
 
 @app.route('/')
 def home():
@@ -81,17 +85,17 @@ def compute():
     c.execute('''
         INSERT INTO tax_records (
             "FirmName", "Date_Period", "net_profit", "net_profit2", "Depreciation",
-            "Bribes", "Penalties", "Gifts & Offers", "Donations", "Others",
-            "Total Non Allowable Deductions", "Adjusted Net Profit Before Tax",
-            "Total Wear & Tear2", "25% Start up Costs", "5% Industrial Building Deduction",
-            "20% Initial Building Allowance", "Horticultural Exp", "Others NAD",
-            "Total Allowable Deductions", "Chargeable Income", "Loss B/f",
-            "Adjusted Chargeable Income", "30% Cooperation Tax", "WHTPaid",
+            "Bribes", "Penalties", "GiftsAndOffers", "Donations", "Others",
+            "TotalNonAllowableDeductions", "AdjustedNetProfitBeforeTax",
+            "TotalWearAndTear2", "StartupCosts", "IndustrialBuildingDeduction",
+            "InitialBuildingAllowance", "HorticulturalExp", "OthersNAD",
+            "TotalAllowableDeductions", "ChargeableIncome", "LossBf",
+            "AdjustedChargeableIncome", "CooperationTax", "WHTPaid",
             "TaxCredit", "ProvisionalTaxPaid", "TaxPayableRecoverable",
-            "Computers,Data & Software",
-            "Plant & Machinery(Farming,Mining,Manufacture)",
-            "Automobiles<=60Million",
-            "Others not in any Class",
+            "ComputersDataSoftware",
+            "PlantMachinery",
+            "Automobiles",
+            "OthersNotInClass",
             "file"
         ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     ''', (
@@ -102,30 +106,30 @@ def compute():
         to_float(form, 'Depreciation'),
         to_float(form, 'Bribes'),
         to_float(form, 'Penalties'),
-        to_float(form, 'Gifts & Offers'),
+        to_float(form, 'GiftsAndOffers'),
         to_float(form, 'Donations'),
         to_float(form, 'Others'),
-        to_float(form, 'Total Non Allowable Deductions'),
-        to_float(form, 'Adjusted Net Profit Before Tax'),
-        to_float(form, 'Total Wear & Tear2'),
-        to_float(form, '25% Start up Costs'),
-        to_float(form, '5% Industrial Building Deduction'),
-        to_float(form, '20% Initial Building Allowance'),
-        to_float(form, 'Horticultural Exp'),
-        to_float(form, 'Others NAD'),
-        to_float(form, 'Total Allowable Deductions'),
-        to_float(form, 'Chargeable Income'),
-        to_float(form, 'Loss B/f'),
-        to_float(form, 'Adjusted Chargeable Income'),
-        to_float(form, '30% Cooperation Tax'),
+        to_float(form, 'TotalNonAllowableDeductions'),
+        to_float(form, 'AdjustedNetProfitBeforeTax'),
+        to_float(form, 'TotalWearAndTear2'),
+        to_float(form, 'StartupCosts'),
+        to_float(form, 'IndustrialBuildingDeduction'),
+        to_float(form, 'InitialBuildingAllowance'),
+        to_float(form, 'HorticulturalExp'),
+        to_float(form, 'OthersNAD'),
+        to_float(form, 'TotalAllowableDeductions'),
+        to_float(form, 'ChargeableIncome'),
+        to_float(form, 'LossBf'),
+        to_float(form, 'AdjustedChargeableIncome'),
+        to_float(form, 'CooperationTax'),
         to_float(form, 'WHTPaid'),
         to_float(form, 'TaxCredit'),
         to_float(form, 'ProvisionalTaxPaid'),
         to_float(form, 'TaxPayableRecoverable'),
-        to_float(form, 'Computers,Data & Software'),
-        to_float(form, 'Plant & Machinery(Farming,Mining,Manufacture)'),
-        to_float(form, 'Automobiles<=60Million'),
-        to_float(form, 'Others not in any Class'),
+        to_float(form, 'ComputersDataSoftware'),
+        to_float(form, 'PlantMachinery'),
+        to_float(form, 'Automobiles'),
+        to_float(form, 'OthersNotInClass'),
         filename
     ))
     conn.commit()
@@ -151,17 +155,17 @@ def view_records():
 
     columns = [
         "FirmName", "Date_Period", "net_profit", "net_profit2", "Depreciation",
-        "Bribes", "Penalties", "Gifts & Offers", "Donations", "Others",
-        "Total Non Allowable Deductions", "Adjusted Net Profit Before Tax",
-        "Total Wear & Tear2", "25% Start up Costs", "5% Industrial Building Deduction",
-        "20% Initial Building Allowance", "Horticultural Exp", "Others NAD",
-        "Total Allowable Deductions", "Chargeable Income", "Loss B/f",
-        "Adjusted Chargeable Income", "30% Cooperation Tax", "WHTPaid",
+        "Bribes", "Penalties", "GiftsAndOffers", "Donations", "Others",
+        "TotalNonAllowableDeductions", "AdjustedNetProfitBeforeTax",
+        "TotalWearAndTear2", "StartupCosts", "IndustrialBuildingDeduction",
+        "InitialBuildingAllowance", "HorticulturalExp", "OthersNAD",
+        "TotalAllowableDeductions", "ChargeableIncome", "LossBf",
+        "AdjustedChargeableIncome", "CooperationTax", "WHTPaid",
         "TaxCredit", "ProvisionalTaxPaid", "TaxPayableRecoverable",
-        "Computers,Data & Software",
-        "Plant & Machinery(Farming,Mining,Manufacture)",
-        "Automobiles<=60Million",
-        "Others not in any Class",
+        "ComputersDataSoftware",
+        "PlantMachinery",
+        "Automobiles",
+        "OthersNotInClass",
         "file"
     ]
 
@@ -214,17 +218,17 @@ def download_csv():
 
     columns = [
         "id", "FirmName", "Date_Period", "net_profit", "net_profit2", "Depreciation",
-        "Bribes", "Penalties", "Gifts & Offers", "Donations", "Others",
-        "Total Non Allowable Deductions", "Adjusted Net Profit Before Tax",
-        "Total Wear & Tear2", "25% Start up Costs", "5% Industrial Building Deduction",
-        "20% Initial Building Allowance", "Horticultural Exp", "Others NAD",
-        "Total Allowable Deductions", "Chargeable Income", "Loss B/f",
-        "Adjusted Chargeable Income", "30% Cooperation Tax", "WHTPaid",
+        "Bribes", "Penalties", "GiftsAndOffers", "Donations", "Others",
+        "TotalNonAllowableDeductions", "AdjustedNetProfitBeforeTax",
+        "TotalWearAndTear2", "StartupCosts", "IndustrialBuildingDeduction",
+        "InitialBuildingAllowance", "HorticulturalExp", "OthersNAD",
+        "TotalAllowableDeductions", "ChargeableIncome", "LossBf",
+        "AdjustedChargeableIncome", "CooperationTax", "WHTPaid",
         "TaxCredit", "ProvisionalTaxPaid", "TaxPayableRecoverable",
-        "Computers,Data & Software",
-        "Plant & Machinery(Farming,Mining,Manufacture)",
-        "Automobiles<=60Million",
-        "Others not in any Class",
+        "ComputersDataSoftware",
+        "PlantMachinery",
+        "Automobiles",
+        "OthersNotInClass",
         "file"
     ]
 
@@ -243,6 +247,7 @@ def download_csv():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 
